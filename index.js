@@ -79,8 +79,7 @@ export default class HTMLText extends PureComponent {
       if (error) {
         done(error);
       }
-
-      done(null, this._domToElement(dom));
+      done(null, dom);
     });
 
     const parser = new htmlparser.Parser(handler);
@@ -124,10 +123,13 @@ export default class HTMLText extends PureComponent {
         }
 
         if (node.name == 'img') {
-          const { src, width } = node.attribs;
+          const { src } = node.attribs;
+          const dimension = this.state.index
           return (
-            <AutoHeightImage
-            width={ (parseInt(width) || 300) }
+            <Image
+            onLoad={(event) => this.setState({index: event.nativeEvent.source})}
+            style={{width: dimension?.width || 300, height: dimension?.height || 300}}
+            key={this.state.index}
             source={{ uri: src }} />
           );
         }
@@ -173,7 +175,7 @@ export default class HTMLText extends PureComponent {
 
     this._rendering = true;
 
-    this._htmlToComponent((error: any, element) => {
+    this._htmlToComponent((error: any, dom) => {
       this._rendering = false;
 
       if (error) {
@@ -181,15 +183,15 @@ export default class HTMLText extends PureComponent {
       }
 
       if (this._mounted) {
-        this.setState({ element });
+        this.setState({ dom });
       }
     });
   }
 
   render() {
-    if (this.state.element) {
+    if (this.state.dom) {
       const { style } = this.props;
-      return <>{this.state.element}</>;
+      return <>{ this._domToElement(this.state.dom)}</>;
     }
 
     return <Text />;
