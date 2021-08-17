@@ -5,7 +5,7 @@
  */
 
 import React, { PureComponent } from 'react';
-import { addons, View, Text, StyleSheet, Platform, Image } from 'react-native';
+import { addons, View, Text, StyleSheet, Platform, Image, Dimensions } from 'react-native';
 import entities from 'entities';
 import htmlparser from 'htmlparser2';
 import AutoHeightImage from 'react-native-auto-height-image'
@@ -46,6 +46,7 @@ export default class HTMLText extends PureComponent {
 
     this.state = {
       element: null,
+      dom: null,
     };
 
     this._mounted = false;
@@ -79,6 +80,7 @@ export default class HTMLText extends PureComponent {
       if (error) {
         done(error);
       }
+
       done(null, dom);
     });
 
@@ -123,13 +125,10 @@ export default class HTMLText extends PureComponent {
         }
 
         if (node.name == 'img') {
-          const { src } = node.attribs;
-          const dimension = this.state.index
+          const { src, width } = node.attribs;
           return (
-            <Image
-            onLoad={(event) => this.setState({index: event.nativeEvent.source})}
-            style={{width: dimension?.width || 300, height: dimension?.height || 300}}
-            key={this.state.index}
+            <AutoHeightImage
+            width={ Dimensions.get("window").width * 0.7 }
             source={{ uri: src }} />
           );
         }
@@ -191,7 +190,7 @@ export default class HTMLText extends PureComponent {
   render() {
     if (this.state.dom) {
       const { style } = this.props;
-      return <>{ this._domToElement(this.state.dom)}</>;
+      return <>{this._domToElement(this.state.dom)}</>;
     }
 
     return <Text />;
