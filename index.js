@@ -8,7 +8,6 @@ import React, { PureComponent } from 'react';
 import { addons, View, Text, StyleSheet, Platform, Image, Dimensions } from 'react-native';
 import entities from 'entities';
 import htmlparser from 'htmlparser2';
-import AutoHeightImage from 'react-native-auto-height-image'
 
 const baseFontStyle = {
   fontSize: 14,
@@ -125,10 +124,12 @@ export default class HTMLText extends PureComponent {
         }
 
         if (node.name == 'img') {
-          const { src, width } = node.attribs;
+          const { src, width, height } = node.attribs;
+          const valWidth = parseInt(width ?? "300")
+          const valHeight = parseInt(height ?? "150") 
           return (
-            <AutoHeightImage
-            width={ Dimensions.get("window").width * 0.7 }
+            <Image
+            style={{width: valWidth, height: valHeight }}
             source={{ uri: src }} />
           );
         }
