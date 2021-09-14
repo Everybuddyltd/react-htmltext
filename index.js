@@ -11,8 +11,9 @@ import htmlparser from 'htmlparser2';
 
 const baseFontStyle = {
   fontSize: 14,
+  color: "green"
 };
-const paragraphStyle = { ...baseFontStyle };
+const paragraphStyle = { ...baseFontStyle,  };
 const boldStyle = { ...baseFontStyle, fontWeight: '500' };
 const centerStyle = { ...baseFontStyle, textAlign: 'center' };
 const italicStyle = { ...baseFontStyle, fontStyle: 'italic' };
@@ -95,6 +96,17 @@ export default class HTMLText extends PureComponent {
 
     return dom.map((node, index, list) => {
       if (node.type == 'text') {
+        if (node.data === "\n") {
+          return (
+            <Text
+              key={index}
+              style={{height: 20}}
+              {...this.props.textProps}
+            >
+              {entities.decodeHTML(node.data)}
+            </Text>
+          );
+        }
         return (
           <Text
             key={index}
@@ -129,7 +141,8 @@ export default class HTMLText extends PureComponent {
           const valHeight = parseInt(height ?? "150") 
           return (
             <Image
-            style={{width: valWidth, height: valHeight }}
+            resizeMethod={"resize"}
+            style={{width: valWidth, height: valHeight, backgroundColor: "red", margin: 10 }}
             source={{ uri: src }} />
           );
         }
@@ -147,9 +160,9 @@ export default class HTMLText extends PureComponent {
             </Text>
           );
         }
-
+        const Component = node.name === 'p' ? View : Text
         return (
-          <Text
+          <Component
             key={index}
             onPress={callback}
             style={
@@ -162,7 +175,7 @@ export default class HTMLText extends PureComponent {
             {...this.props.textProps}
           >
             {this._domToElement(node.children, node)}
-          </Text>
+          </Component>
         );
       }
     });
