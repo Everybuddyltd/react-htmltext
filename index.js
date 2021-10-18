@@ -142,7 +142,7 @@ export default class HTMLText extends PureComponent {
           return (
             <Image
             resizeMethod={"resize"}
-            style={{width: valWidth, height: valHeight, backgroundColor: "red", margin: 10 }}
+            style={{width: valWidth, height: valHeight, margin: 10 }}
             source={{ uri: src }} />
           );
         }
