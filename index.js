@@ -160,7 +160,7 @@ export default class HTMLText extends PureComponent {
             </Text>
           );
         }
-        const Component = node.name === 'p' ? View : Text
+        const Component = node.name === 'p' && node.type !== 'tag' ? View : Text
         return (
           <Component
             key={index}
